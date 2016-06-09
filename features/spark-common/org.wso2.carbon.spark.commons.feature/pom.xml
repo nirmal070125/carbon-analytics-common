@@ -235,8 +235,6 @@
                                 </bundleDef>
                                 <bundleDef>org.wso2.orbit.org.apache.spark:spark-streaming_2.10
                                 </bundleDef>
-                                <bundleDef>org.wso2.orbit.org.apache.hadoop:hadoop-client
-                                </bundleDef>
                                 <bundleDef>org.wso2.orbit.org.apache.htrace:htrace-core-apache
                                 </bundleDef>
                                 <bundleDef>org.wso2.json4s:json4s-jackson_2.10</bundleDef>
@@ -249,7 +247,6 @@
                                 <bundleDef>org.apache.commons:commons-lang3</bundleDef>
                                 <bundleDef>org.apache.commons:commons-math3</bundleDef>
                                 <bundleDef>org.xerial.snappy:snappy-java</bundleDef>
-                                <bundleDef>com.google.guava:guava</bundleDef>
                                 <bundleDef>org.json.wso2:json</bundleDef>
                                 <bundleDef>io.netty.wso2:netty-all</bundleDef>
                                 <bundleDef>org.scala-lang:scala-library</bundleDef>
