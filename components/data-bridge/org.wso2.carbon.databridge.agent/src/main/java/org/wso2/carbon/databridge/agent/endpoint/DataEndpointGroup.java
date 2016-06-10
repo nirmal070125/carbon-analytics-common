@@ -22,6 +22,7 @@ import com.lmax.disruptor.EventHandler;
 import com.lmax.disruptor.InsufficientCapacityException;
 import com.lmax.disruptor.RingBuffer;
 import com.lmax.disruptor.dsl.Disruptor;
+
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.wso2.carbon.databridge.agent.DataEndpointAgent;
@@ -31,6 +32,9 @@ import org.wso2.carbon.databridge.agent.util.DataEndpointConstants;
 import org.wso2.carbon.databridge.agent.util.DataPublisherUtil;
 import org.wso2.carbon.databridge.commons.Event;
 import org.wso2.carbon.databridge.commons.utils.DataBridgeThreadFactory;
+import org.wso2.carbon.metrics.manager.Gauge;
+import org.wso2.carbon.metrics.manager.Level;
+import org.wso2.carbon.metrics.manager.MetricManager;
 
 import java.io.IOException;
 import java.net.Socket;
@@ -81,7 +85,15 @@ public class DataEndpointGroup implements DataEndpointFailureCallback {
         this.reconnectionService.scheduleAtFixedRate(new ReconnectionTask(), reconnectionInterval,
                 reconnectionInterval, TimeUnit.SECONDS);
         currentDataPublisherIndex.set(START_INDEX);
+        MetricManager.gauge(Level.INFO, MetricManager.name(this.getClass(),"ring-buffer-remaining-capacity"), queueSizeGauge);
     }
+    
+    Gauge<Long> queueSizeGauge = new Gauge<Long>() {
+        @Override
+        public Long getValue() {
+            return eventQueue.ringBuffer.remainingCapacity();
+        }
+    };
 
     public void addDataEndpoint(DataEndpoint dataEndpoint) {
         dataEndpoints.add(dataEndpoint);
