@@ -38,6 +38,7 @@ import org.wso2.carbon.databridge.core.internal.authentication.CarbonAuthenticat
 import org.wso2.carbon.databridge.core.internal.utils.DataBridgeConstants;
 import org.wso2.carbon.databridge.core.internal.utils.DataBridgeCoreBuilder;
 import org.wso2.carbon.identity.authentication.AuthenticationService;
+import org.wso2.carbon.metrics.manager.MetricService;
 import org.wso2.carbon.user.api.UserStoreException;
 import org.wso2.carbon.user.core.service.RealmService;
 import org.wso2.carbon.utils.ConfigurationContextService;
@@ -47,6 +48,7 @@ import org.wso2.carbon.utils.multitenancy.MultitenantConstants;
 import javax.xml.bind.JAXBContext;
 import javax.xml.bind.JAXBException;
 import javax.xml.bind.Unmarshaller;
+
 import java.io.File;
 import java.util.List;
 
@@ -63,6 +65,8 @@ import java.util.List;
  * @scr.reference name="config.context.service"
  * interface="org.wso2.carbon.utils.ConfigurationContextService" cardinality="0..1"
  * policy="dynamic"  bind="setConfigurationContextService" unbind="unsetConfigurationContextService"
+ * @scr.reference name="metric.service" interface="org.wso2.carbon.metrics.manager.MetricService" cardinality="1..1"
+ *                policy="dynamic" bind="setMetricService" unbind="unsetMetricService"
  */
 public class DataBridgeDS {
     private static final Log log = LogFactory.getLog(DataBridgeDS.class);
@@ -184,6 +188,14 @@ public class DataBridgeDS {
 
     protected void unsetConfigurationContextService(ConfigurationContextService contextService) {
         DataBridgeServiceValueHolder.setConfigurationContextService(null);
+    }
+    
+    protected void setMetricService(MetricService metricService) {
+        DataBridgeServiceValueHolder.setMetricService(metricService);
+    }
+
+    protected void unsetMetricService(MetricService metricService) {
+        DataBridgeServiceValueHolder.setMetricService(null);
     }
 
 }

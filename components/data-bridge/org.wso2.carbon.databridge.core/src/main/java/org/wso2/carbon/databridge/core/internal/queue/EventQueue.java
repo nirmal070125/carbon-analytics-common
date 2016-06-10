@@ -21,9 +21,13 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.wso2.carbon.databridge.commons.utils.DataBridgeThreadFactory;
 import org.wso2.carbon.databridge.core.AgentCallback;
+import org.wso2.carbon.databridge.core.DataBridgeServiceValueHolder;
 import org.wso2.carbon.databridge.core.RawDataAgentCallback;
 import org.wso2.carbon.databridge.core.Utils.EventComposite;
 import org.wso2.carbon.databridge.core.conf.DataBridgeConfiguration;
+import org.wso2.carbon.metrics.manager.Gauge;
+import org.wso2.carbon.metrics.manager.Level;
+import org.wso2.carbon.metrics.manager.MetricManager;
 
 import java.util.List;
 import java.util.concurrent.BlockingQueue;
@@ -53,7 +57,16 @@ public class EventQueue {
         executorService = Executors.newFixedThreadPool(dataBridgeConfiguration.getWorkerThreads(), new DataBridgeThreadFactory("Core"));
         eventQueue = new EventBlockingQueue(dataBridgeConfiguration.getEventBufferSize(),
                 dataBridgeConfiguration.getMaxEventBufferCapacity());
+        DataBridgeServiceValueHolder.getMetricService().gauge(
+                MetricManager.name(this.getClass(), "event-queue-remaining-capacity"), Level.INFO, queueSizeGauge);
     }
+    
+    Gauge<Integer> queueSizeGauge = new Gauge<Integer>() {
+        @Override
+        public Integer getValue() {
+            return eventQueue.remainingCapacity();
+        }
+    };
 
     public void publish(EventComposite eventComposite) {
         try {
